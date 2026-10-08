@@ -8,3 +8,10 @@ Version: 1.0.0
 */
 
 /* Custom Aaronz styles go below */
+
+/* Hide the mobile off-canvas menu until the mmenu script has initialised it
+   (adds .mm-menu). Prevents the raw bullet list flashing on mobile while JS
+   is deferred. */
+#navbar-offcanvas:not(.mm-menu) {
+    display: none;
+}
