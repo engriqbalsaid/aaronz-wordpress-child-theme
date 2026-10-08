@@ -19,3 +19,37 @@ function aaronz_child_enqueue_styles() {
 }
 
 add_action('wp_enqueue_scripts', 'aaronz_child_enqueue_styles');
+
+/**
+ * Landing page slider images (logos/backgrounds) are hard-coded as
+ * /images/*.webp, a folder that exists on production but not on staging.
+ * On staging, point those URLs at the production copy so they load.
+ * Remove once the /images folder is uploaded to the staging web root.
+ */
+function aaronz_fix_staging_image_urls($html) {
+    $prod = 'https://www.aaronz.co/images/';
+
+    return preg_replace(
+        array(
+            '#https?://(?:www\.)?staging20\.aaronz\.co/images/#i',
+            '#(\ssrc=["\'])images/#i',
+        ),
+        array(
+            $prod,
+            '$1' . $prod,
+        ),
+        $html
+    );
+}
+
+function aaronz_start_staging_image_fix() {
+    if (is_admin() || is_feed()) {
+        return;
+    }
+    if (false === stripos(home_url(), 'staging20.aaronz.co')) {
+        return;
+    }
+    ob_start('aaronz_fix_staging_image_urls');
+}
+
+add_action('template_redirect', 'aaronz_start_staging_image_fix', 0);
