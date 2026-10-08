@@ -53,3 +53,20 @@ function aaronz_start_staging_image_fix() {
 }
 
 add_action('template_redirect', 'aaronz_start_staging_image_fix', 0);
+
+
+/**
+ * Easy Property Listings sets an epl_wp_session cookie on every request.
+ * A Set-Cookie header stops the SiteGround dynamic cache from storing the
+ * page, so anonymous home page views were never cached (~1.8s TTFB).
+ * Drop the cookie for logged-out visitors on the home page only.
+ */
+function aaronz_drop_epl_session_cookie_on_home() {
+    if (is_user_logged_in() || is_admin() || !is_front_page()) {
+        return;
+    }
+
+    header_remove('Set-Cookie');
+}
+
+add_action('send_headers', 'aaronz_drop_epl_session_cookie_on_home', 99);
