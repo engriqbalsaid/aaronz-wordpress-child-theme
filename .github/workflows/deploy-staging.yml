@@ -46,8 +46,8 @@ jobs:
             -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SG_PORT }}" \
             ./ "${{ secrets.SG_USER }}@${{ secrets.SG_HOST }}:${{ secrets.SG_THEME_PATH }}/"
 
-      - name: Purge SiteGround cache
+      - name: Rebuild SiteGround combined CSS/JS and purge cache
         run: |
           ssh -i ~/.ssh/id_deploy -p "${{ secrets.SG_PORT }}" \
             "${{ secrets.SG_USER }}@${{ secrets.SG_HOST }}" \
-            "cd ${{ secrets.SG_WP_PATH }} && wp sg purge"
+            "cd ${{ secrets.SG_WP_PATH }} && rm -rf wp-content/uploads/siteground-optimizer-assets/* && wp sg purge"
