@@ -70,3 +70,16 @@ function aaronz_drop_epl_session_cookie_on_home() {
 }
 
 add_action('send_headers', 'aaronz_drop_epl_session_cookie_on_home', 99);
+
+
+/**
+ * Hide the mobile off-canvas menu until the mmenu script has initialised it
+ * (it adds .mm-menu). Printed inline because the child style.css is not
+ * included in SiteGround's combined stylesheet, and deferred JS otherwise
+ * lets the raw menu list flash on mobile.
+ */
+function aaronz_hide_uninitialised_mobile_menu() {
+    echo '<style id="aaronz-offcanvas-fix">#navbar-offcanvas:not(.mm-menu){display:none}</style>' . "\n";
+}
+
+add_action('wp_head', 'aaronz_hide_uninitialised_mobile_menu', 1);
