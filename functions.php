@@ -184,6 +184,12 @@ body article.property-grid-v2 .bottom-label .property-price{color:#245f6d!import
 body article.property-grid-v2 .bottom-label .property-price *{color:inherit!important;font-size:inherit!important;font-weight:inherit!important}
 body article.property-grid-v2 .property-metas{order:6;margin:0 0 12px;font-size:14px;color:#3a3a3a;gap:14px}
 body article.property-grid-v2 .property-metas-bottom{order:7;margin-top:auto;padding-top:12px;border-top:1px solid #ececec;font-size:12px}
+body article.property-grid-v2 .property-location i{display:inline-block!important;width:14px;height:16px;margin-right:6px;vertical-align:-3px;background:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23333\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z\'/><circle cx=\'12\' cy=\'10\' r=\'2.5\'/></svg>") no-repeat center/contain}
+body article.property-grid-v2 .property-location i:before{content:none!important}
+body .widget-properties .slick-track{display:flex!important}
+body .widget-properties .slick-slide{height:auto!important}
+body .widget-properties .slick-slide>div,body .widget-properties .slick-slide .item{height:100%}
+body .widget-properties .slick-list{padding:6px 0 10px!important}
 @media(max-width:767px){body article.property-grid-v2{padding:12px}}
 </style>' . "\n";
 }
