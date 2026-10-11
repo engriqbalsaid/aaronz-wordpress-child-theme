@@ -83,3 +83,28 @@ function aaronz_hide_uninitialised_mobile_menu() {
 }
 
 add_action('wp_head', 'aaronz_hide_uninitialised_mobile_menu', 1);
+
+
+/**
+ * Home page (/home/, page ID 3191) heading sizes modelled on bayut.com:
+ * hero H1 40px, section titles 24px, card titles 16px, body text 14px.
+ * Scoped to this page only; Elementor sets sizes per widget, hence !important.
+ */
+function aaronz_home_typography() {
+    if (!is_page(3191)) {
+        return;
+    }
+
+    echo '<style id="aaronz-home-typography">
+.page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:40px!important;line-height:1.25!important;font-weight:600!important}
+.page-id-3191 h2.elementor-heading-title,.page-id-3191 h2.title{font-size:24px!important;line-height:1.4!important;font-weight:600!important}
+.page-id-3191 h2.property-title,.page-id-3191 .elementor-image-box-title{font-size:16px!important;line-height:1.5!important;font-weight:700!important}
+.page-id-3191 .elementor-image-box-description{font-size:14px!important;line-height:1.6!important}
+@media(max-width:767px){
+.page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:28px!important}
+.page-id-3191 h2.elementor-heading-title,.page-id-3191 h2.title{font-size:20px!important}
+}
+</style>' . "\n";
+}
+
+add_action('wp_head', 'aaronz_home_typography', 20);
