@@ -128,3 +128,31 @@ body,body :is(h1,h2,h3,h4,h5,h6,p,a,li,span,div,button,select,input,textarea,lab
 }
 
 add_action('wp_head', 'aaronz_global_fonts', 5);
+
+
+/**
+ * Site-wide type scale modelled on bayut.com: body, menu and buttons 14px,
+ * H1 40px, H2 24px, H3 18px, H4 16px (smaller on phones). Elementor sets sizes
+ * per widget, hence !important. Page-specific rules (e.g. the home page) are
+ * more specific and still win. The home page "4.9" rating is left as designed.
+ */
+function aaronz_global_type_scale() {
+    echo '<style id="aaronz-type-scale">
+body{font-size:14px!important;line-height:1.6}
+body p,body li,body td,body th,body label,body input,body select,body textarea,body button,body dt,body dd,body blockquote{font-size:14px!important}
+body #primary-menu>li>a,body .navbar-nav>li>a{font-size:14px!important}
+body h1:not(.elementor-element-9f60759 *),body h1.elementor-heading-title:not(.elementor-element-9f60759 *){font-size:40px!important;line-height:1.25!important;font-weight:700!important}
+body h2{font-size:24px!important;line-height:1.35!important;font-weight:700!important}
+body h3{font-size:18px!important;line-height:1.4!important;font-weight:700!important}
+body h4{font-size:16px!important;line-height:1.4!important;font-weight:700!important}
+body h5,body h6{font-size:14px!important;line-height:1.4!important;font-weight:700!important}
+@media(max-width:767px){
+body h1:not(.elementor-element-9f60759 *){font-size:28px!important}
+body h2{font-size:20px!important}
+body h3{font-size:16px!important}
+body h4{font-size:15px!important}
+}
+</style>' . "\n";
+}
+
+add_action('wp_head', 'aaronz_global_type_scale', 10);
