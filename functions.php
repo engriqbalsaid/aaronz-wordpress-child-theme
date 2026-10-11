@@ -96,10 +96,7 @@ function aaronz_home_typography() {
         return;
     }
 
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">' . "\n";
-
     echo '<style id="aaronz-home-typography">
-.page-id-3191,.page-id-3191 h1,.page-id-3191 h2,.page-id-3191 h3,.page-id-3191 h4,.page-id-3191 h5,.page-id-3191 h6,.page-id-3191 p,.page-id-3191 a,.page-id-3191 li,.page-id-3191 button,.page-id-3191 select,.page-id-3191 input,.page-id-3191 label,.page-id-3191 .elementor-heading-title{font-family:"Lato",Arial,sans-serif!important}
 .page-id-3191 #primary-menu>li>a{font-size:14px!important}
 .page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:40px!important;line-height:1.25!important;font-weight:700!important}
 .page-id-3191 .elementor-element-38ddc28 p{font-size:20px!important;line-height:1.3!important;font-weight:700!important}
@@ -116,3 +113,18 @@ function aaronz_home_typography() {
 }
 
 add_action('wp_head', 'aaronz_home_typography', 20);
+
+
+/**
+ * Site-wide font: Lato, then Helvetica. Icon fonts (Font Awesome, eicons, EPL
+ * and theme icons) are excluded so icons keep rendering.
+ */
+function aaronz_global_fonts() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap">' . "\n";
+
+    echo '<style id="aaronz-global-fonts">
+body,body :is(h1,h2,h3,h4,h5,h6,p,a,li,span,div,button,select,input,textarea,label,td,th,dt,dd,blockquote,strong,b,em):not([class*="icon"]):not(.fa):not(.fas):not(.far):not(.fab):not(.fal):not([class*="fa-"]):not([class*="eicon"]):not([class*="epl-"]):not([class*="glyph"]):not(#wpadminbar):not(#wpadminbar *){font-family:"Lato","Helvetica Neue",Helvetica,Arial,sans-serif!important}
+</style>' . "\n";
+}
+
+add_action('wp_head', 'aaronz_global_fonts', 5);
