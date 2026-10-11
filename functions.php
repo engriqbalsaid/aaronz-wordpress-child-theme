@@ -167,30 +167,32 @@ add_action('wp_head', 'aaronz_global_type_scale', 10);
  */
 function aaronz_listing_cards() {
     echo '<style id="aaronz-listing-cards">
-body article.property-grid-v2{position:relative;display:flex!important;flex-direction:column;background:#fff;border:0!important;border-radius:16px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.09);overflow:hidden;height:100%}
+body article.property-grid-v2{--pad:14px;position:relative;display:flex!important;flex-direction:column;background:#fff;border:0!important;border-radius:16px;padding:var(--pad);box-shadow:0 2px 14px rgba(0,0,0,.09);overflow:hidden;height:100%}
 body article.property-grid-v2 .top-info,body article.property-grid-v2 .property-thumbnail-wrapper,body article.property-grid-v2 .property-information{display:contents!important}
 body article.property-grid-v2 .image-thumbnail{order:1;display:block;border-radius:12px;overflow:hidden;margin:0 0 14px}
 body article.property-grid-v2 .image-thumbnail img{width:100%;display:block;border-radius:12px}
-body article.property-grid-v2 .top-label{position:absolute!important;top:24px;left:24px;right:auto;bottom:auto;z-index:2}
-body article.property-grid-v2 .top-label a{border-radius:6px;font-size:12px!important;padding:3px 10px}
+body article.property-grid-v2 .top-label{position:absolute!important;top:calc(var(--pad) + 10px);left:calc(var(--pad) + 10px);margin:0!important;right:auto;bottom:auto;z-index:2}
+body article.property-grid-v2 .top-label a{display:inline-block;margin:0!important;border-radius:6px;font-size:12px!important;line-height:20px;padding:3px 10px}
+body article.property-grid-v2 .property-image:before{display:none!important}
 body article.property-grid-v2 h2.property-title{order:2;font-size:16px!important;line-height:1.4!important;font-weight:700!important;margin:0 0 6px!important;color:#1b1b1b}
 body article.property-grid-v2 h2.property-title a{color:inherit}
-body article.property-grid-v2 .property-type{order:3;margin:0 0 8px;font-size:14px;color:#3a3a3a}
+body article.property-grid-v2 .property-type{order:3;margin:0 0 6px;font-size:14px;color:#3a3a3a}
+body article.property-grid-v2 .property-type .property-type{margin:0!important}
 body article.property-grid-v2 .property-type a{color:inherit}
 body article.property-grid-v2 .property-location{order:4;margin:0 0 12px;font-size:14px;color:#3a3a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body article.property-grid-v2 .property-location a{color:inherit}
 body article.property-grid-v2 .bottom-label{order:5;position:static!important;display:block!important;background:#f3f3f3!important;border-radius:10px;padding:12px 10px;margin:0 0 10px;text-align:center}
 body article.property-grid-v2 .bottom-label .property-price{color:#245f6d!important;font-size:16px!important;font-weight:700!important}
 body article.property-grid-v2 .bottom-label .property-price *{color:inherit!important;font-size:inherit!important;font-weight:inherit!important}
-body article.property-grid-v2 .property-metas{order:6;margin:0 0 12px;font-size:14px;color:#3a3a3a;gap:14px}
-body article.property-grid-v2 .property-metas-bottom{order:7;margin-top:auto;padding-top:12px;border-top:1px solid #ececec;font-size:12px}
+body article.property-grid-v2 .property-metas{order:6;margin:0 0 12px;padding:0!important;font-size:14px;color:#3a3a3a;gap:14px}
+body article.property-grid-v2 .property-metas-bottom{order:7;margin-top:auto;justify-content:space-between!important;padding-top:12px;border-top:1px solid #ececec;font-size:12px}
 body article.property-grid-v2 .property-location i{display:inline-block!important;width:14px;height:16px;margin-right:6px;vertical-align:-3px;background:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23333\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z\'/><circle cx=\'12\' cy=\'10\' r=\'2.5\'/></svg>") no-repeat center/contain}
 body article.property-grid-v2 .property-location i:before{content:none!important}
 body .widget-properties .slick-track{display:flex!important}
 body .widget-properties .slick-slide{height:auto!important}
 body .widget-properties .slick-slide>div,body .widget-properties .slick-slide .item{height:100%}
 body .widget-properties .slick-list{padding:6px 0 10px!important}
-@media(max-width:767px){body article.property-grid-v2{padding:12px}}
+@media(max-width:767px){body article.property-grid-v2{--pad:12px}body .widget-properties .slick-track{display:block!important}body article.property-grid-v2 .property-metas-bottom{margin-top:0}}
 </style>' . "\n";
 }
 
