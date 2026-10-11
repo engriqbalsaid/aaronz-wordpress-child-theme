@@ -87,7 +87,8 @@ add_action('wp_head', 'aaronz_hide_uninitialised_mobile_menu', 1);
 
 /**
  * Home page (/home/, page ID 3191) heading sizes modelled on bayut.com:
- * hero H1 40px, section titles 24px, card titles 16px, body text 14px.
+ * Lato font, menu 14px, hero H1 40px, hero subtitle 20px, section titles
+ * 24px, card titles 16px, body text 14px.
  * Scoped to this page only; Elementor sets sizes per widget, hence !important.
  */
 function aaronz_home_typography() {
@@ -95,13 +96,20 @@ function aaronz_home_typography() {
         return;
     }
 
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">' . "\n";
+
     echo '<style id="aaronz-home-typography">
-.page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:40px!important;line-height:1.25!important;font-weight:600!important}
-.page-id-3191 h2.elementor-heading-title,.page-id-3191 h2.title{font-size:24px!important;line-height:1.4!important;font-weight:600!important}
+.page-id-3191,.page-id-3191 h1,.page-id-3191 h2,.page-id-3191 h3,.page-id-3191 h4,.page-id-3191 h5,.page-id-3191 h6,.page-id-3191 p,.page-id-3191 a,.page-id-3191 li,.page-id-3191 button,.page-id-3191 select,.page-id-3191 input,.page-id-3191 label,.page-id-3191 .elementor-heading-title{font-family:"Lato",Arial,sans-serif!important}
+.page-id-3191 #primary-menu>li>a{font-size:14px!important}
+.page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:40px!important;line-height:1.25!important;font-weight:700!important}
+.page-id-3191 .elementor-element-38ddc28 p{font-size:20px!important;line-height:1.3!important;font-weight:700!important}
+.page-id-3191 h2.elementor-heading-title,.page-id-3191 h2.title{font-size:24px!important;line-height:1.4!important;font-weight:700!important}
 .page-id-3191 h2.property-title,.page-id-3191 .elementor-image-box-title{font-size:16px!important;line-height:1.5!important;font-weight:700!important}
 .page-id-3191 .elementor-image-box-description{font-size:14px!important;line-height:1.6!important}
+.page-id-3191 button[type=submit]{font-size:14px!important}
 @media(max-width:767px){
 .page-id-3191 .elementor-element-f34ea30 .elementor-heading-title{font-size:28px!important}
+.page-id-3191 .elementor-element-38ddc28 p{font-size:16px!important}
 .page-id-3191 h2.elementor-heading-title,.page-id-3191 h2.title{font-size:20px!important}
 }
 </style>' . "\n";
