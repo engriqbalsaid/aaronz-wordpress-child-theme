@@ -207,7 +207,50 @@ add_action('wp_head', 'aaronz_listing_cards', 30);
  *  - Images without width/height cause layout shift; add them from the
  *    attachment metadata using the size named in the image's own class.
  */
+function aaronz_delay_tracking($html) {
+    if (false === stripos($html, '</body>')) {
+        return $html;
+    }
+
+    $delayed = 0;
+    $html    = preg_replace_callback(
+        '#<script\b([^>]*)>(.*?)</script>#is',
+        function ($m) use (&$delayed) {
+            $attrs = $m[1];
+            $body  = $m[2];
+
+            // Google gtag.js loaders (Analytics / Ads).
+            if (preg_match('#\bsrc=["\'](https?://www\.googletagmanager\.com/gtag/js[^"\']*)["\']#i', $attrs, $src)) {
+                $delayed++;
+                return '<script type="text/plain" data-aaronz-delay data-src="' . $src[1] . '"></script>';
+            }
+
+            // Inline Google Tag Manager and Facebook pixel snippets.
+            if ('' !== trim($body) && !preg_match('#\bsrc=#i', $attrs)
+                && (false !== strpos($body, 'googletagmanager.com/gtm.js') || false !== strpos($body, 'connect.facebook.net'))) {
+                $delayed++;
+                return '<script type="text/plain" data-aaronz-delay>' . $body . '</script>';
+            }
+
+            return $m[0];
+        },
+        $html
+    );
+
+    if (!$delayed) {
+        return $html;
+    }
+
+    // Run the delayed scripts on first interaction, or after 6 seconds.
+    $loader = '<script>(function(){var d=false;function run(){if(d)return;d=true;document.querySelectorAll("script[data-aaronz-delay]").forEach(function(o){var s=document.createElement("script");if(o.getAttribute("data-src")){s.src=o.getAttribute("data-src");s.async=true}else{s.text=o.textContent}o.parentNode.insertBefore(s,o);o.parentNode.removeChild(o)})}["scroll","click","touchstart","keydown","mousemove"].forEach(function(e){addEventListener(e,run,{once:true,passive:true})});setTimeout(run,6000)})();</script>';
+    $pos    = strripos($html, '</body>');
+
+    return substr_replace($html, $loader, $pos, 0);
+}
+
 function aaronz_perf_html($html) {
+    $html = aaronz_delay_tracking($html);
+
     $html = preg_replace(
         '#@import\s+url\([\'"]?//fonts\.googleapis\.com/css\?family=Montserrat:100[\'"]?\);?#i',
         '',
