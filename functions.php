@@ -120,7 +120,11 @@ add_action('wp_head', 'aaronz_home_typography', 20);
  * and theme icons) are excluded so icons keep rendering.
  */
 function aaronz_global_fonts() {
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap">' . "\n";
+    $lato = 'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap';
+
+    // Load Lato without blocking first paint (preload, then switch to stylesheet).
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+    echo '<link rel="preload" as="style" href="' . $lato . '" onload="this.onload=null;this.rel=\'stylesheet\'"><noscript><link rel="stylesheet" href="' . $lato . '"></noscript>' . "\n";
 
     echo '<style id="aaronz-global-fonts">
 body,body :is(h1,h2,h3,h4,h5,h6,p,a,li,span,div,button,select,input,textarea,label,td,th,dt,dd,blockquote,strong,b,em):not([class*="icon"]):not(.fa):not(.fas):not(.far):not(.fab):not(.fal):not([class*="fa-"]):not([class*="eicon"]):not([class*="epl-"]):not([class*="glyph"]):not(#wpadminbar):not(#wpadminbar *){font-family:"Lato","Helvetica Neue",Helvetica,Arial,sans-serif!important}
@@ -194,3 +198,47 @@ body .widget-properties .slick-list{padding:6px 0 10px!important}
 }
 
 add_action('wp_head', 'aaronz_listing_cards', 30);
+
+
+/**
+ * Page speed clean-ups applied to the final HTML:
+ *  - Popup Maker's inline CSS @imports Montserrat weight 100, a render-blocking
+ *    Google Fonts request for a font the site does not use.
+ *  - Images without width/height cause layout shift; add them from the
+ *    attachment metadata using the size named in the image's own class.
+ */
+function aaronz_perf_html($html) {
+    $html = preg_replace(
+        '#@import\s+url\([\'"]?//fonts\.googleapis\.com/css\?family=Montserrat:100[\'"]?\);?#i',
+        '',
+        $html
+    );
+
+    return preg_replace_callback(
+        '#<img\b[^>]*>#i',
+        function ($m) {
+            $tag = $m[0];
+            if (preg_match('#\swidth\s*=#i', $tag)) {
+                return $tag;
+            }
+            if (!preg_match('#wp-image-(\d+)#', $tag, $id) || !preg_match('#\bsize-([A-Za-z0-9_-]+)#', $tag, $size)) {
+                return $tag;
+            }
+            $src = wp_get_attachment_image_src((int) $id[1], $size[1]);
+            if (!$src || empty($src[1]) || empty($src[2])) {
+                return $tag;
+            }
+            return preg_replace('#^<img\b#i', '<img width="' . (int) $src[1] . '" height="' . (int) $src[2] . '"', $tag, 1);
+        },
+        $html
+    );
+}
+
+function aaronz_start_perf_html() {
+    if (is_admin() || is_feed() || is_embed() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) {
+        return;
+    }
+    ob_start('aaronz_perf_html');
+}
+
+add_action('template_redirect', 'aaronz_start_perf_html', 1);
