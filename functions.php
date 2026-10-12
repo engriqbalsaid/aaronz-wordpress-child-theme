@@ -250,6 +250,7 @@ function aaronz_delay_tracking($html) {
 
 function aaronz_perf_html($html) {
     $html = aaronz_delay_tracking($html);
+    $html = aaronz_ejari_schema($html);
 
     $html = preg_replace(
         '#@import\s+url\([\'"]?//fonts\.googleapis\.com/css\?family=Montserrat:100[\'"]?\);?#i',
@@ -285,3 +286,78 @@ function aaronz_start_perf_html() {
 }
 
 add_action('template_redirect', 'aaronz_start_perf_html', 1);
+
+
+/**
+ * SEO for /ejari-registration-services/: shorter title and meta description
+ * (the Yoast ones were 74 and 189 characters, over what Google shows), plus
+ * FAQPage and Service structured data built from the page's own FAQ accordion.
+ */
+function aaronz_is_ejari_page() {
+    return is_page('ejari-registration-services');
+}
+
+function aaronz_ejari_title($title) {
+    return aaronz_is_ejari_page() ? 'Ejari Registration in Dubai | Online Renewal | Aaronz & Co' : $title;
+}
+
+function aaronz_ejari_description($desc) {
+    return aaronz_is_ejari_page()
+        ? 'Register or renew your Ejari online in Dubai. RERA-approved typing center for new, renewal, cancellation & transfer. Fast approval. Call Aaronz & Co.'
+        : $desc;
+}
+
+foreach (array('wpseo_title', 'wpseo_opengraph_title', 'wpseo_twitter_title') as $aaronz_hook) {
+    add_filter($aaronz_hook, 'aaronz_ejari_title', 20);
+}
+foreach (array('wpseo_metadesc', 'wpseo_opengraph_desc', 'wpseo_twitter_description') as $aaronz_hook) {
+    add_filter($aaronz_hook, 'aaronz_ejari_description', 20);
+}
+
+function aaronz_ejari_schema($html) {
+    if (!aaronz_is_ejari_page() || false === stripos($html, '</head>')) {
+        return $html;
+    }
+
+    $faq = array();
+    if (preg_match_all('#<a class="elementor-accordion-title"[^>]*>(.*?)</a></div><div id="elementor-tab-content-\d+"[^>]*>(.*?)</div></div>#is', $html, $m, PREG_SET_ORDER)) {
+        foreach ($m as $item) {
+            $q = trim(html_entity_decode(wp_strip_all_tags($item[1]), ENT_QUOTES, 'UTF-8'));
+            $a = trim(html_entity_decode(wp_strip_all_tags($item[2]), ENT_QUOTES, 'UTF-8'));
+            if ('' !== $q && '' !== $a) {
+                $faq[] = array(
+                    '@type'          => 'Question',
+                    'name'           => $q,
+                    'acceptedAnswer' => array('@type' => 'Answer', 'text' => $a),
+                );
+            }
+        }
+    }
+
+    $graph = array(
+        array(
+            '@type'       => 'Service',
+            'name'        => 'Ejari Registration Services in Dubai',
+            'serviceType' => 'Ejari registration, renewal, cancellation and transfer',
+            'url'         => get_permalink(),
+            'areaServed'  => array('@type' => 'City', 'name' => 'Dubai'),
+            'provider'    => array(
+                '@type' => 'RealEstateAgent',
+                'name'  => 'Aaronz & Co. Real Estate',
+                'url'   => home_url('/'),
+            ),
+        ),
+    );
+    if ($faq) {
+        $graph[] = array('@type' => 'FAQPage', 'mainEntity' => $faq);
+    }
+
+    $json = wp_json_encode(array('@context' => 'https://schema.org', '@graph' => $graph), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
+    if (!$json) {
+        return $html;
+    }
+
+    $pos = stripos($html, '</head>');
+
+    return substr_replace($html, '<script type="application/ld+json" id="aaronz-ejari-schema">' . $json . '</script>', $pos, 0);
+}
