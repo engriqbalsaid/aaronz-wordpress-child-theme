@@ -320,7 +320,7 @@ function aaronz_ejari_schema($html) {
     }
 
     $faq = array();
-    if (preg_match_all('#<a class="elementor-accordion-title"[^>]*>(.*?)</a></div><div id="elementor-tab-content-\d+"[^>]*>(.*?)</div></div>#is', $html, $m, PREG_SET_ORDER)) {
+    if (preg_match_all('#<a\b[^>]*class="[^"]*elementor-accordion-title[^"]*"[^>]*>(.*?)</a>\s*</div>\s*<div\b[^>]*id="elementor-tab-content-\d+"[^>]*>(.*?)</div>\s*</div>#is', $html, $m, PREG_SET_ORDER)) {
         foreach ($m as $item) {
             $q = trim(html_entity_decode(wp_strip_all_tags($item[1]), ENT_QUOTES, 'UTF-8'));
             $a = trim(html_entity_decode(wp_strip_all_tags($item[2]), ENT_QUOTES, 'UTF-8'));
